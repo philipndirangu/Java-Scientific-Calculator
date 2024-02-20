@@ -11,14 +11,16 @@ public class CalculatorUI extends JFrame implements ActionListener {
             "x²", "x³", "xʸ", "eˣ", "10ˣ", "7", "8", "9", "x",
             "1/x", "log₁₀", "²√x", "∛x", "ʸ√ₓ", "4", "5", "6", "-",
             "ln", "sin", "cos", "tan", "Rad", "3", "2", "1", "+",
-            "x⁻¹", "sin⁻¹", "cos⁻¹", "tan⁻¹", ".", "0", "del", "MOD", "=",
+            "x⁻¹", "sinh", "cosh", "tanh", ".", "0", "del", "MOD", "="
     };
     protected int operator = 0;
     protected boolean sinSelected = false;
     protected boolean cosSelected = false;
     protected boolean tanSelected = false;
+    protected boolean sinhSelected = false;
+    protected boolean coshSelected = false;
+    protected boolean tanhSelected = false;
     protected double constantValue = 0;
-
     protected JPanel panel = new JPanel(new BorderLayout(0, 0));
     protected JPanel btnPanel = new JPanel(new GridLayout(5, 9, 2, 2));
     protected JButton[] btns = new JButton[symbols.length];
@@ -37,6 +39,7 @@ public class CalculatorUI extends JFrame implements ActionListener {
         btnPanel.setBackground(Color.BLACK);
         screen.setForeground(Color.WHITE);
 
+
         for (int i = 0; i < symbols.length; i++) {
             btns[i] = new JButton(symbols[i]);
             btns[i].setOpaque(true);
@@ -46,56 +49,33 @@ public class CalculatorUI extends JFrame implements ActionListener {
             btns[i].addActionListener(this);
             btnPanel.add(btns[i]);
 
-            if (symbols[i].matches("[0-9]")) {
+            if (symbols[i].matches("[0-8]")) {
                 btns[i].setBackground(Color.GRAY);
+            } else if (symbols[i].equals("9")) {
+                btns[i].setBackground(Color.GRAY);
+            } else if (symbols[i].equals(".")) {
+                btns[i].setBackground(new Color(64, 64, 64)); // Decimal "." is (new Color(64, 64, 64))
             } else if (symbols[i].equals("del") || symbols[i].equals("MOD")) {
                 btns[i].setBackground(Color.GRAY);
-            } else if (symbols[i].matches("[÷x+-]")) {
+            } else if (symbols[i].matches("[÷x+-=]")) {
                 btns[i].setBackground(new Color(240, 160, 0));
-            } else if (symbols[i].equals(".")) {
-                btns[i].setBackground(new Color(64, 64, 64));
             } else {
                 btns[i].setBackground(new Color(64, 64, 64));
             }
         }
-        
-        //Removing the extra zero on the last row
-        btnPanel.remove(40);
-
-        // Add the "." button to the array
-        btns[41] = new JButton(".");
-        btns[41].setOpaque(true);
-        btns[41].setBorderPainted(false);
-        btns[41].setForeground(Color.WHITE);
-        btns[41].setFont(new Font("San Francisco Display Light", Font.PLAIN, 20));
-        btns[41].addActionListener(this);
-        btns[41].setBackground(Color.GRAY);
-        btnPanel.add(btns[41]);  // Add the button to the panel
-
-        // Adding the "=" button to the array
-        btns[40] = new JButton("=");
-        btns[40].setOpaque(true);
-        btns[40].setBorderPainted(false);
-        btns[40].setForeground(Color.WHITE);
-        btns[40].setFont(new Font("San Francisco Display Light", Font.PLAIN, 20));
-        btns[40].addActionListener(this);
-        btns[40].setBackground(new Color(240, 160, 0));
-        btnPanel.add(btns[40]);  // Add the button to the panel
-
-        // Remove the extra tan⁻¹ button
-        btnPanel.remove(42);
 
         add(panel);
         panel.add(screen, BorderLayout.NORTH);
         panel.add(btnPanel, BorderLayout.CENTER);
         panel.add(calculatingTf, BorderLayout.SOUTH);
 
+
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
     }
-    
+
     public void actionPerformed(ActionEvent e) {
         String cmd = e.getActionCommand().toString();
         switch (cmd) {
@@ -248,20 +228,20 @@ public class CalculatorUI extends JFrame implements ActionListener {
             case "sin":
                 sinSelected = true;
                 break;
-            case "sin⁻¹":
-                sinSelected = true;
+            case "sinh":
+                sinhSelected = true;
                 break;
             case "cos":
                 cosSelected = true;
                 break;
-            case "cos⁻¹":
-                cosSelected = true;
+            case "cosh":
+                coshSelected = true;
                 break;
             case "tan":
                 tanSelected = true;
                 break;
-            case "tan⁻¹":
-                tanSelected = true;
+            case "tanh":
+                tanhSelected = true;
                 break;
             default:
         }
@@ -272,22 +252,31 @@ public class CalculatorUI extends JFrame implements ActionListener {
     private void performCalculation() {
         if (!screen.getText().isEmpty()) {
             secondNum = Double.parseDouble(screen.getText());
-            if (sinSelected || cosSelected || tanSelected) {
+            if (sinSelected || cosSelected || tanSelected || sinhSelected || coshSelected || tanhSelected) {
                 double num = Double.parseDouble(screen.getText());
                 double result = 0;
                 if (sinSelected) {
                     result = Math.sin(Math.toRadians(num));
+                } else if (sinhSelected) {
+                    result = Math.sinh(num);
                 } else if (cosSelected) {
                     result = Math.cos(Math.toRadians(num));
+                } else if (coshSelected) {
+                    result = Math.cosh(num);
                 } else if (tanSelected) {
                     result = Math.tan(Math.toRadians(num));
+                } else if (tanhSelected) {
+                    result = Math.tanh(num);
                 }
                 screen.setText(String.valueOf(result));
                 calculatingTf.setText(calculatingTf.getText() + "(" + num + ") = " + result);
 
                 sinSelected = false;
+                sinhSelected = false;
                 cosSelected = false;
+                coshSelected = false;
                 tanSelected = false;
+                tanhSelected = false;
             } else {
                 switch (operator) {
                     case 1 -> {
@@ -354,6 +343,7 @@ public class CalculatorUI extends JFrame implements ActionListener {
                 double lnResult = Math.log(logValue);
                 double log10Result = Math.log10(logValue);
 
+
                 screen.setText("ln(" + logValue + ") = " + lnResult + "\nlog(" + logValue + ") = " + log10Result);
                 calculatingTf.setText("ln(" + logValue + ") = " + lnResult);
             } else {
@@ -361,17 +351,22 @@ public class CalculatorUI extends JFrame implements ActionListener {
             }
         }
     }
+
     private void performXInverse() {
         if (!screen.getText().isEmpty()) {
             double xValue = Double.parseDouble(screen.getText());
+            double inverseResult;
+
             if (xValue != 0) {
-                double inverseResult = 1 / xValue;
+                inverseResult = 1 / xValue;
+                screen.setText(String.valueOf(inverseResult));
                 calculatingTf.setText("1 / " + xValue + " = " + inverseResult);
             } else {
                 screen.setText("Cannot divide by zero");
             }
         }
     }
+
     private double customModuloOperation(double a, double b) {
         return a % b;
     }
@@ -379,3 +374,5 @@ public class CalculatorUI extends JFrame implements ActionListener {
         new CalculatorUI();
     }
 }
+
+
