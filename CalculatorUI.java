@@ -106,8 +106,11 @@ public class CalculatorUI extends JFrame implements ActionListener {
                 performRegularOperation(cmd);
                 break;
             case "sin":
+            case "sinh":
             case "cos":
+            case "cosh":
             case "tan":
+            case "tanh":
                 selectTrigonometricFunction(cmd);
                 break;
             case "=":
@@ -374,5 +377,3 @@ public class CalculatorUI extends JFrame implements ActionListener {
         new CalculatorUI();
     }
 }
-
-
