@@ -40,6 +40,7 @@ public class CalculatorUI extends JFrame implements ActionListener {
         btnPanel.setBackground(Color.BLACK);
         screen.setForeground(Color.WHITE);
 
+        screen.setFocusable(false); //Unable to Use the Keyboard
 
         for (int i = 0; i < symbols.length; i++) {
             btns[i] = new JButton(symbols[i]);
@@ -209,6 +210,12 @@ public class CalculatorUI extends JFrame implements ActionListener {
                     };
                     screen.setText("");
                     break;
+                case "del":
+                    String currentText = screen.getText();
+                    if (!currentText.isEmpty()) {
+                        screen.setText(currentText.substring(0, currentText.length() - 1));
+                    }
+                    break;
                 case "+/-":
                     double value = Double.parseDouble(screen.getText());
                     value *= -1;
@@ -221,12 +228,6 @@ public class CalculatorUI extends JFrame implements ActionListener {
                     break;
                 case "c":
                     screen.setText("");
-                    break;
-                case "del":
-                    String currentText = screen.getText();
-                    if (!currentText.isEmpty()) {
-                        screen.setText(currentText.substring(0, currentText.length() - 1));
-                    }
                     break;
             }
         }
