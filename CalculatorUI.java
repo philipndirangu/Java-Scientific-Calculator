@@ -27,7 +27,6 @@ public class CalculatorUI extends JFrame implements ActionListener {
     protected JTextArea screen = new JTextArea(5, 9);
     protected double firstNum = 0, secondNum = 0;
     protected JTextField calculatingTf = new JTextField(9);
-
     public CalculatorUI() {
         init();
     }
@@ -255,6 +254,11 @@ public class CalculatorUI extends JFrame implements ActionListener {
     private void performCalculation() {
         if (!screen.getText().isEmpty()) {
             secondNum = Double.parseDouble(screen.getText());
+            if (operator == 1 && secondNum == 0) {
+                screen.setText("Error");
+                calculatingTf.setText("Cannot divide by zero");
+                return;  // Exit the method to prevent further calculations
+            }
             if (sinSelected || cosSelected || tanSelected || sinhSelected || coshSelected || tanhSelected) {
                 double num = Double.parseDouble(screen.getText());
                 double result = 0;
