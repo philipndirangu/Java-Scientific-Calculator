@@ -4,7 +4,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
 
+//Class Declaration
 public class CalculatorUI extends JFrame implements ActionListener {
+    //Extending JFrame from Java Swing to allow for use of features i.e Window Creation
     protected DecimalFormat df = new DecimalFormat("#,###.00");
     protected String[] symbols = {
             "(", ")", "π", "e", "!", "c", "+/-", "%", "÷",
@@ -13,7 +15,7 @@ public class CalculatorUI extends JFrame implements ActionListener {
             "ln", "sin", "cos", "tan", "Rad", "3", "2", "1", "+",
             "x⁻¹", "sinh", "cosh", "tanh", ".", "0", "del", "MOD", "="
     };
-    protected int operator = 0;
+    protected int operator = 0; //Type of operator selected, later used by performRegularOperation to det which operation to use
     protected boolean sinSelected = false;
     protected boolean cosSelected = false;
     protected boolean tanSelected = false;
@@ -29,8 +31,8 @@ public class CalculatorUI extends JFrame implements ActionListener {
     protected JTextField calculatingTf = new JTextField(9);
     public CalculatorUI() {
         init();
-    }
-    public void init() {
+    } //Access  Modifier is Public. Can be accessed from other classes (instances can also be made from other classes)
+    public void init() { //Method the constructor is calling on. Contains actual GUI
         setTitle("Calculator");
         screen.setFont(new Font("San Francisco Display Light", Font.PLAIN, 20));
         screen.setBackground(Color.BLACK);
@@ -70,122 +72,127 @@ public class CalculatorUI extends JFrame implements ActionListener {
 
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        pack();
-        setLocationRelativeTo(null);
-        setVisible(true);
+        pack(); //Resizes
+        setLocationRelativeTo(null); //Sets JFrame centered to the screen
+        setVisible(true); // Makes frame Visible
     }
 
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent e) { //Method checks button pressed and Updates UI, Switch Statement.
         String cmd = e.getActionCommand().toString();
-        switch (cmd) {
-            case ".":
-                if (!screen.getText().contains(".")) {
+        try {
+            switch (cmd) {
+                case ".":
+                    if (!screen.getText().contains(".")) {
+                        screen.append(cmd);
+                    }
+                    break;
+                case "0":
+                case "1":
+                case "2":
+                case "3":
+                case "4":
+                case "5":
+                case "6":
+                case "7":
+                case "8":
+                case "9":
                     screen.append(cmd);
-                }
-                break;
-            case "0":
-            case "1":
-            case "2":
-            case "3":
-            case "4":
-            case "5":
-            case "6":
-            case "7":
-            case "8":
-            case "9":
-                screen.append(cmd);
-                break;
-            case "÷":
-            case "x":
-            case "-":
-            case "+":
-            case "%":
-            case "+/-":
-            case "c":
-                performRegularOperation(cmd);
-                break;
-            case "sin":
-            case "sinh":
-            case "cos":
-            case "cosh":
-            case "tan":
-            case "tanh":
-                selectTrigonometricFunction(cmd);
-                break;
-            case "=":
-                performCalculation();
-                break;
-            case "π":
-                constantValue = Math.PI;
-                screen.setText(Double.toString(constantValue));
-                break;
-            case "e":
-                constantValue = Math.E;
-                screen.setText(Double.toString(constantValue));
-                break;
-            case "log₁₀":
-                performLogarithm();
-                break;
-            case "x²":
-                double squareValue = Double.parseDouble(screen.getText());
-                double squareResult = Math.pow(squareValue, 2);
-                screen.setText(Double.toString(squareResult));
-                break;
-            case "x³":
-                double cubeValue = Double.parseDouble(screen.getText());
-                double cubeResult = Math.pow(cubeValue, 3);
-                screen.setText(Double.toString(cubeResult));
-                break;
-            case "xʸ":
-                firstNum = Double.parseDouble(screen.getText());
-                operator = 5;
-                screen.setText("");
-                break;
-            case "10ˣ":
-                double powTenValue = Double.parseDouble(screen.getText());
-                double powTenResult = Math.pow(10, powTenValue);
-                screen.setText(Double.toString(powTenResult));
-                break;
-            case "eˣ":
-                double expValue = Double.parseDouble(screen.getText());
-                double expResult = Math.exp(expValue);
-                screen.setText(Double.toString(expResult));
-                break;
-            case "x⁻¹":
-                performXInverse();
-                break;
-            case "1/x":
-                double reciprocalValue = Double.parseDouble(screen.getText());
-                double reciprocalResult = 1 / reciprocalValue;
-                screen.setText(Double.toString(reciprocalResult));
-                break;
-            case "²√x":
-                double sqrtValue = Double.parseDouble(screen.getText());
-                double sqrtResult = Math.sqrt(sqrtValue);
-                screen.setText(Double.toString(sqrtResult));
-                break;
-            case "∛x":
-                double cbrtValue = Double.parseDouble(screen.getText());
-                double cbrtResult = Math.cbrt(cbrtValue);
-                screen.setText(Double.toString(cbrtResult));
-                break;
-            case "ʸ√ₓ":
-                double yRootValue = Double.parseDouble(screen.getText());
-                double yRootResult = Math.pow(firstNum, 1 / yRootValue);
-                screen.setText(Double.toString(yRootResult));
-                calculatingTf.setText(firstNum + "√" + yRootValue + " = " + yRootResult);
-                break;
-            case "!":
-                performFactorial();
-                break;
-            case "MOD":
-                performModuloOperation();
-                break;
-            default:
+                    break;
+                case "÷":
+                case "x":
+                case "-":
+                case "+":
+                case "%":
+                case "+/-":
+                case "c":
+                    performRegularOperation(cmd);
+                    break;
+                case "sin":
+                case "sinh":
+                case "cos":
+                case "cosh":
+                case "tan":
+                case "tanh":
+                    selectTrigonometricFunction(cmd); //some functions delegated to other methods
+                    break;
+                case "=":
+                    performCalculation();
+                    break;
+                case "π":
+                    constantValue = Math.PI;
+                    screen.setText(Double.toString(constantValue));
+                    break;
+                case "e":
+                    constantValue = Math.E;
+                    screen.setText(Double.toString(constantValue));
+                    break;
+                case "log₁₀":
+                    performLogarithm();
+                    break;
+                case "x²":
+                    double squareValue = Double.parseDouble(screen.getText());
+                    double squareResult = Math.pow(squareValue, 2);
+                    screen.setText(Double.toString(squareResult));
+                    break;
+                case "x³":
+                    double cubeValue = Double.parseDouble(screen.getText());
+                    double cubeResult = Math.pow(cubeValue, 3);
+                    screen.setText(Double.toString(cubeResult));
+                    break;
+                case "xʸ":
+                    firstNum = Double.parseDouble(screen.getText());
+                    operator = 5;
+                    screen.setText("");
+                    break;
+                case "10ˣ":
+                    double powTenValue = Double.parseDouble(screen.getText());
+                    double powTenResult = Math.pow(10, powTenValue);
+                    screen.setText(Double.toString(powTenResult));
+                    break;
+                case "eˣ":
+                    double expValue = Double.parseDouble(screen.getText());
+                    double expResult = Math.exp(expValue);
+                    screen.setText(Double.toString(expResult));
+                    break;
+                case "x⁻¹":
+                    performXInverse();
+                    break;
+                case "1/x":
+                    double reciprocalValue = Double.parseDouble(screen.getText());
+                    double reciprocalResult = 1 / reciprocalValue;
+                    screen.setText(Double.toString(reciprocalResult));
+                    break;
+                case "²√x":
+                    double sqrtValue = Double.parseDouble(screen.getText());
+                    double sqrtResult = Math.sqrt(sqrtValue);
+                    screen.setText(Double.toString(sqrtResult));
+                    break;
+                case "∛x":
+                    double cbrtValue = Double.parseDouble(screen.getText());
+                    double cbrtResult = Math.cbrt(cbrtValue);
+                    screen.setText(Double.toString(cbrtResult));
+                    break;
+                case "ʸ√ₓ":
+                    double yRootValue = Double.parseDouble(screen.getText());
+                    double yRootResult = Math.pow(firstNum, 1 / yRootValue);
+                    screen.setText(Double.toString(yRootResult));
+                    calculatingTf.setText(firstNum + "√" + yRootValue + " = " + yRootResult);
+                    break;
+                case "!":
+                    performFactorial();
+                    break;
+                case "MOD":
+                    performModuloOperation();
+                    break;
+                default:
+            }
+        }
+        catch(Exception ex){
+            screen.setText("Error");
         }
     }
 
-    private void performRegularOperation(String cmd) {
+    private void performRegularOperation(String cmd) { //first checks if screen is empty, if not, it captures the first number on screen, sets operator and clears the screen for the next number
         if (!screen.getText().isEmpty()) {
             switch (cmd) {
                 case "÷":
@@ -251,7 +258,7 @@ public class CalculatorUI extends JFrame implements ActionListener {
         calculatingTf.setText(cmd);
     }
 
-    private void performCalculation() {
+    private void performCalculation() {//
         if (!screen.getText().isEmpty()) {
             secondNum = Double.parseDouble(screen.getText());
             if (operator == 1 && secondNum == 0) {
@@ -327,6 +334,7 @@ public class CalculatorUI extends JFrame implements ActionListener {
         }
     }
     private long factorial(int n) {
+        if(n < 0) throw new RuntimeException("No negative factorial");
         if (n == 0 || n == 1) {
             return 1;
         }
